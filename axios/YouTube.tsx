@@ -12,7 +12,6 @@ const YouTube:AxiosInstance = axios.create({
 
 
 export async function getFeed(maxResults: number = 25):Promise<VideoFeedItem[]|null> {
-    console.log('grabbing video feed')
     try {
         const response:any = await YouTube.get("/videos",{
             params: {
@@ -35,13 +34,29 @@ export async function searchVideo(term:string, maxResults:number = 25):Promise<a
             params:{
                 part:"snippet",
                 q:term,
-                maxResults
+                maxResults,
+                type:'video'
             }
         });
-
         return response.data.items;
     } catch(error) {
         //Unable to search videos
+        return null;
+    }
+}
+
+
+export async function getVideo(id:string):Promise<any> {
+    try {
+        const response:any = await YouTube.get('/videos', {
+            params: {
+                part:"contentDetails,snippet,statistics",
+                id
+            }
+        });
+        return response.data.items[0]
+    } catch(error) {
+        console.log('error', error);
         return null;
     }
 }

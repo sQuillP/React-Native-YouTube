@@ -1,29 +1,38 @@
-import { View, TextInput, Text, StyleSheet, NativeEventEmitter, Keyboard } from "react-native";
+import { View, TextInput, Text, StyleSheet, NativeEventEmitter, Keyboard, Pressable } from "react-native";
 import {useState} from 'react';
 import Ionicons from "@expo/vector-icons/Ionicons";
-import useDebounce from "../hooks/useDebounce";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-
-
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { searchVideos } from "../redux/thunk/searchVideos";
 
 function HomeSearch() {
 
     //potentially debounce the term
-    const [term, updateTerm] = useState('');
+    const [term, updateTerm] = useState<string>('');
     const navigator:any = useNavigation();
+    const route:any = useRoute();
+    const dispatchVideos:any = useDispatch();
+
 
     function onSearchTerm() {
-        console.log('should search');
+        if(!term.trim()) return;
+
+        dispatchVideos(searchVideos(term));
         navigator.navigate('Search',{term});
-}
+    }
 
     return (
         <SafeAreaView style={styles.container}>
+            {route.name!=='TabNavigation'&&(
+                <Pressable style={styles.backIcon} onPress={()=> navigator.goBack()}>
+                    <Ionicons name="arrow-back-outline" size={30} color='gray'/>
+                </Pressable>
+            )}
             <View style={styles.searchWrapper}>
                 <TextInput 
                     value={term} 
-                    onChangeText={(newText)=>{console.log(newText);updateTerm(newText)}} 
+                    onChangeText={(newText)=>updateTerm(newText)} 
                     onSubmitEditing={onSearchTerm}
                     style={styles.input} 
                     placeholder="Search any video"
@@ -45,14 +54,16 @@ export default HomeSearch;
 
 const styles = StyleSheet.create({
     container:{
-        paddingVertical: 5,
-        paddingHorizontal:10
+        paddingVertical: 10,
+        paddingHorizontal:10,
+        flexDirection:'row',
     },
     searchWrapper: {
         flexDirection:'row',
         borderRadius:10,
         overflow:'hidden',
-        backgroundColor: 'lightgray'
+        backgroundColor: 'lightgray',
+        flex: 1
     },
     input: {
         flex: 1,
@@ -63,5 +74,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 5,
         right: 10,
+    },
+    backIcon: {
+        paddingHorizontal:5
     }
 })

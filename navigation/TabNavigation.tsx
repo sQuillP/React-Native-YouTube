@@ -15,16 +15,12 @@ function TabNavigation() {
 
     return (
         <Tab.Navigator
-
             screenOptions={{
                 tabBarActiveTintColor: Globals.youtube_red,
                 tabBarInactiveTintColor:'black',
                 headerShown: false,
                 tabBarHideOnKeyboard:true,
             }}
-            
-
-
             initialRouteName='Home'    
         >
             <Tab.Screen
@@ -32,7 +28,6 @@ function TabNavigation() {
                 component={Favorites}
                 options={{
                     tabBarIcon:({focused, color, size})=> {
-                        
                         return <Ionicons name="heart-outline" color={color} size={30}/>
                     }
                 }}

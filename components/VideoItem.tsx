@@ -1,38 +1,39 @@
-import {View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, } from 'react-native'
+import {View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { videoData } from '../data/dummyData';
 import { SearchResult } from '../models/Video';
 import formatViews from '../util/formatViews';
 import { formatTimeAgo } from '../util/formatDate';
+import { useNavigation } from '@react-navigation/native';
+import {memo} from 'react';
 
 /* Used for video feed */
 
 
-function VideoItem({url, title, publishedAt, channelTitle, viewCount}:any):any {
+function VideoItem({url, title, publishedAt, channelTitle, viewCount, videoId}:any):any {
     
-    /**
-     * 
-     */
+    const navigator:any = useNavigation();
+
+    function onNavigateVideo() {
+        navigator.navigate('ViewVideo',{videoId});
+    }
+
     return (
-        <TouchableOpacity activeOpacity={0.6} style={styles.container}>
-            {/* <View style={styles.imageContainer}> */}
+        <TouchableOpacity onPress={onNavigateVideo} activeOpacity={0.6} style={styles.container}>
             <Image style={styles.image} source={{uri:url}}/>
-            {/* </View> */}
             <View style={styles.infoContainer}>
                 <Text style={styles.title}>{title}</Text>
-                <Text style={styles.infoData}>{`${channelTitle} • ${formatViews(viewCount)} views ${formatTimeAgo(publishedAt)} ago`}</Text>
+                <Text style={styles.infoData}>{`${channelTitle} • ${viewCount?formatViews(viewCount)+' views':''} ${formatTimeAgo(publishedAt)} ago`}</Text>
             </View>
         </TouchableOpacity>
     )
 }
 
 
-export default VideoItem;
+export default memo(VideoItem);
 
 const styles = StyleSheet.create({
     container: {
-        // flexDirection:'row',
-        borderWidth:1,
         flex: 1,
         backgroundColor:'white'
     },
@@ -58,4 +59,4 @@ const styles = StyleSheet.create({
         fontSize:12,
     },
 
-})
+});
