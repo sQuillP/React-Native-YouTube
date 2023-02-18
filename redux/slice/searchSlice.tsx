@@ -1,11 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { searchVideo } from '../../axios/YouTube';
-import { SearchResult, VideoFeedItem } from '../../models/Video';
+import { VideoResult } from '../../models/Video';
 import { getFeedThunk, searchVideos } from '../thunk/searchVideos';
 
 
 interface SearchState  {
-    videos: SearchResult[] | VideoFeedItem[],
+    videos: VideoResult[]
     loading:boolean
 };
 

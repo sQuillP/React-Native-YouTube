@@ -1,4 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from "react-native"
+import { useCallback } from "react";
+import { FlatList, StyleSheet } from "react-native"
 
 import { useSelector } from "react-redux";
 import RelatedVideo from "./RelatedVideo";
@@ -7,16 +8,15 @@ import RelatedVideo from "./RelatedVideo";
 
 function RecommendedList() {
 
-    const {videos} = useSelector((store:any)=>store.search);
+    const { videos } = useSelector((store:any)=>store.search);
+
+    const keyExtractor = useCallback((item:any)=> item.id,[]);
 
     return (
         <FlatList
             data={videos}
-            keyExtractor={(item)=>{
-                if(item.id.videoId)
-                    return item.id.videoId;
-                return item.id
-            }}
+            style={{paddingHorizontal:5}}
+            keyExtractor={keyExtractor}
             initialNumToRender={25}
             renderItem={({item})=> {
                 return (
@@ -24,7 +24,7 @@ function RecommendedList() {
                         url={item.snippet.thumbnails.default.url}
                         title={item.snippet.title}
                         description={item.snippet.description}
-                        publishedAt={item.snippet.publisedAt}
+                        publishedAt={item.snippet.publishedAt}
                     />
                 )
             }}

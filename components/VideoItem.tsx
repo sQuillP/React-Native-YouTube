@@ -1,8 +1,5 @@
 import {View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { videoData } from '../data/dummyData';
-import { SearchResult } from '../models/Video';
-import formatViews from '../util/formatViews';
 import { formatTimeAgo } from '../util/formatDate';
 import { useNavigation } from '@react-navigation/native';
 import {memo} from 'react';
@@ -10,7 +7,7 @@ import {memo} from 'react';
 /* Used for video feed */
 
 
-function VideoItem({url, title, publishedAt, channelTitle, viewCount, videoId}:any):any {
+function VideoItem({url, title, publishedAt, channelTitle, videoId}:any):any {
     
     const navigator:any = useNavigation();
 
@@ -23,7 +20,7 @@ function VideoItem({url, title, publishedAt, channelTitle, viewCount, videoId}:a
             <Image style={styles.image} source={{uri:url}}/>
             <View style={styles.infoContainer}>
                 <Text style={styles.title}>{title}</Text>
-                <Text style={styles.infoData}>{`${channelTitle} • ${viewCount?formatViews(viewCount)+' views':''} ${formatTimeAgo(publishedAt)} ago`}</Text>
+                <Text style={styles.infoData}>{`${channelTitle} • ${formatTimeAgo(publishedAt)} ago`}</Text>
             </View>
         </TouchableOpacity>
     )

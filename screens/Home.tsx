@@ -30,11 +30,7 @@ function Home() {
             return (
                 <FlatList
                     data={videos}
-                    keyExtractor={(item) => {
-                        if(item.id.videoId)
-                            return item.id.videoId;
-                        return item.id;
-                    }}
+                    keyExtractor={(item) => item.id}
                     initialNumToRender={1}
                     renderItem={({item})=> {
                         return (
@@ -42,7 +38,6 @@ function Home() {
                                 url={item.snippet.thumbnails.medium.url}
                                 title={item.snippet.title}
                                 publishedAt={item.snippet.publishedAt}
-                                viewCount={item.statistics.viewCount}
                                 channelTitle={item.snippet.channelTitle}
                                 videoId={item.id}
                             />
