@@ -1,13 +1,13 @@
 import {View, Text} from "react-native"
 
-
+import BlockedView from "../components/BlockedView";
 
 function Favorites() {
 
     return (
-        <View>
-            <Text>Favorites component</Text>
-        </View>
+        <BlockedView
+            type="Favorites"
+        />
     )
 }
 

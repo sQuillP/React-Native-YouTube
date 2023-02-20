@@ -23,6 +23,7 @@ function RecommendedList() {
                     <RelatedVideo
                         url={item.snippet.thumbnails.default.url}
                         title={item.snippet.title}
+                        videoId={item.id}
                         description={item.snippet.description}
                         publishedAt={item.snippet.publishedAt}
                     />

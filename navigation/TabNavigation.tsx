@@ -20,6 +20,7 @@ function TabNavigation() {
                 tabBarInactiveTintColor:'black',
                 headerShown: false,
                 tabBarHideOnKeyboard:true,
+                tabBarShowLabel:false,
             }}
             initialRouteName='Home'    
         >

@@ -1,12 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authSlice from "./slice/authSlice";
 import searchSlice from "./slice/searchSlice";
 
 
 
 export const store = configureStore({
     reducer: {
-        search: searchSlice
-    }
+        search: searchSlice,
+        auth: authSlice
+    },
+    middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 })
 
 

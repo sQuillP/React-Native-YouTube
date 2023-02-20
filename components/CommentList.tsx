@@ -23,7 +23,7 @@ function CommentList({videoId, onClose}:CommentListProps) {
             console.log(videoId)
             const commentData:Comment[]|any = await getComments(videoId);
             if(!mounted) return;
-            updateComments([commentData[0]]);
+            updateComments(commentData);
             updateLoadingComments(false);
         })()
         return ()=> {mounted = false};
@@ -41,13 +41,13 @@ function CommentList({videoId, onClose}:CommentListProps) {
         {loadingComments?(
             <View style={styles.loader}>
                 <ActivityIndicator size='large' color={Globals.youtube_red}/>
+                <Text>Loading Comments...</Text>
             </View>
         ):
         (<FlatList
             data={comments}
             keyExtractor={(item)=> item.id}
             renderItem={({item})=> {
-                console.log('logging the snippet',item.snippet);
                 return (
                     <CommentComponent
                         profile={item.snippet.authorProfileImageUrl}
@@ -69,7 +69,7 @@ export default CommentList;
 
 const styles = StyleSheet.create({
     container: {
-
+        flex: 1
     },
     header: {
         paddingVertical: 10,

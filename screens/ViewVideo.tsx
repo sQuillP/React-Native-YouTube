@@ -10,6 +10,8 @@ import formatViews from "../util/formatViews";
 import { getVideo } from "../axios/YouTube";
 import { Globals } from "../globals/styles";
 import CommentList from "../components/CommentList";
+import Description from "../components/Description";
+
 function ViewVideo() {
     const [showDescription, updateShowDescription] = useState<boolean>(false);
     const [showComments, updateShowComments] = useState<boolean>(false);
@@ -26,7 +28,7 @@ function ViewVideo() {
             updateVideoContent(video);
         })();
         return ()=>{mounted = false}
-    },[]);
+    },[videoId]);
 
     useEffect(()=> {
         const timeout = setTimeout(()=> {
@@ -35,10 +37,13 @@ function ViewVideo() {
         return ()=> clearTimeout(timeout);
     },[]);
 
-    function onCloseComments(){
+    function onCloseComments():void{
         updateShowComments(false);
     }
 
+    function onCloseDescription():void{
+        updateShowDescription(false);
+    }
 
     function renderContent() {
 
@@ -49,37 +54,43 @@ function ViewVideo() {
                     onClose={onCloseComments}
                 />
             );
-        else
+        if(showDescription)
             return (
-                <>
-                    <View style={styles.crumbContainer}>
-                        <TouchableOpacity onPress={()=>updateShowDescription(true)} style={styles.breadCrumb}>
-                            <Text style={styles.crumbDesc}>Show Description</Text>
-                            <Ionicons name="pencil-outline" size={20} color='black'/>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.breadCrumb}
-                            onPress={()=>updateShowComments(true)}>
-                            <Text style={styles.crumbDesc}>Show Comments</Text>
-                            <Ionicons 
-                                style={styles.breadCrumbIcon} 
-                                name='chatbox-outline' 
-                                size={20} 
-                                color='black'
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.relatedWrapper}>
-                        <Text style={styles.related}>Related</Text>
-                    </View>
-                    { !loadRecommended&& 
-                        (<View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                            <Text>Loading Recommended...</Text>
-                        </View>)
-                    }
-                    {loadRecommended && <RecommendedList/>}
-                </>
+                <Description
+                    onClose={onCloseDescription}
+                    description={videoContent.snippet.description}
+                />
             )
+        return (
+            <>
+                <View style={styles.crumbContainer}>
+                    <TouchableOpacity onPress={()=>updateShowDescription(true)} style={styles.breadCrumb}>
+                        <Text style={styles.crumbDesc}>Show Description</Text>
+                        <Ionicons name="pencil-outline" size={15} color='black'/>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={styles.breadCrumb}
+                        onPress={()=>updateShowComments(true)}>
+                        <Text style={styles.crumbDesc}>Show Comments</Text>
+                        <Ionicons 
+                            style={styles.breadCrumbIcon} 
+                            name='chatbox-outline' 
+                            size={15} 
+                            color='black'
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.relatedWrapper}>
+                    <Text style={styles.related}>Related</Text>
+                </View>
+                { !loadRecommended&& 
+                    (<View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
+                        <Text>Loading Recommended...</Text>
+                    </View>)
+                }
+                {loadRecommended && <RecommendedList/>}
+            </>
+        )
     }
 
 
@@ -95,7 +106,7 @@ function ViewVideo() {
                     <View style={styles.videoHeaders}>
                         <Text style={styles.videoTitle}>{videoContent.snippet.title}</Text>
                         <Text style={styles.videoInfo}>
-                            {`${formatViews(videoContent.statistics.viewCount)} views • Posted ${formatTimeAgo(videoContent.snippet.publishedAt)} ago • ${formatDuration(videoContent.contentDetails.duration)}`}
+                            {`${formatViews(videoContent.statistics.viewCount)} views • Posted ${formatTimeAgo(videoContent.snippet.publishedAt)} ago • ${formatDuration(videoContent.contentDetails.duration)} duration`}
                         </Text>
                     </View> 
                 )

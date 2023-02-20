@@ -1,12 +1,14 @@
 
+import { useNavigation } from '@react-navigation/native';
 import {memo} from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 interface RelatedVideoProps {
     url:string,
     title:string,
     description:string,
-    publishedAt:string
+    publishedAt:string,
+    videoId:string
 };
 
 
@@ -16,16 +18,22 @@ function chopString(description:string, limit:number):string {
     return description;
 }
 
-function RelatedVideo({url, title, description, publishedAt}:RelatedVideoProps) {
+function RelatedVideo({url, title, description, publishedAt, videoId}:RelatedVideoProps) {
+
+    const navigation:any = useNavigation();
+
+    function handleNavigation():void {
+        navigation.navigate('ViewVideo', {videoId});
+    }
 
     return (
-        <View style={styles.container}>
+        <TouchableOpacity activeOpacity={0.7} onPress={handleNavigation} style={styles.container}>
             <Image source={{uri: url}} style={styles.image}/>
             <View style={styles.textWrapper}>
                 <Text style={styles.header}>{chopString(title,33)}</Text>
                 <Text style={styles.description}>{chopString(description,22)}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

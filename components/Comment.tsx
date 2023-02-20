@@ -12,10 +12,14 @@ interface CommentProps {
 };
 
 
+function chopText(text:string, length:number):string {
+    if(text.length < length)
+        return text;
+    return text.substring(0,length) + '...';
+}
+
 
 function Comment({profile, likes, content, datePosted, channelName}:CommentProps) {
-
-    // console.log({profile, likes, content, datePosted, channelName});
 
     return (
         <View style={styles.container}>
@@ -24,13 +28,14 @@ function Comment({profile, likes, content, datePosted, channelName}:CommentProps
             </View>
             <View style={styles.textWrapper}>
                 <View style={styles.headerText}>
-                    <Text style={styles.channel}>{channelName}</Text>
-                    <Text style={styles.datePosted}>{formatTimeAgo(datePosted as string)}</Text>
+                    <Text style={styles.channel}>{channelName + " "}</Text>
+                    <Text style={styles.datePosted}>{formatTimeAgo(datePosted as string) + " ago"}</Text>
                 </View>
-                <Text style={styles.content}>{content}</Text>
+                <View style={{flexDirection:'row'}}>
+                    <Text style={styles.content}>{chopText(content,60)}</Text>
+                </View>
                 <View style={styles.likeWrapper}>
-                        <Ionicons name='caret-up-outline' size={25}/>
-                        <Text style={styles.likeText}>{likes}</Text>
+                        <Text style={styles.likeText}>{likes + ' likes'}</Text>
                 </View>
             </View>
         </View>
@@ -41,15 +46,17 @@ export default Comment;
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal:10,
-        borderBottomColor:'gray',
-        borderWidth:1
+        padding:10,
+        borderBottomColor:'lightgray',
+        borderBottomWidth:1,
+        flexDirection:'row',
+        
     },
     imageWrapper: {
-        height:50,
-        width: 50,
+        height:45,
+        width: 45,
         overflow:'hidden',
-        borderRadius:25,
+        borderRadius:45/2,
     },
     image: {
         height:'100%',
@@ -57,23 +64,27 @@ const styles = StyleSheet.create({
         resizeMode:'cover'
     },
     textWrapper: {
-
+        width:'85%',
+        paddingLeft: 10
     },
     headerText: {
         flexDirection:'row'
     },
     channel: {
-        fontSize:10,
+        fontSize:12,
     },
     datePosted: {
-        fontSize:10,
+        fontSize:12,
         color:'gray'
     },
     content: {
-        fontSize:15
+        fontSize:15,
+        flexWrap:'wrap',
+        flex: 1
     },
     likeWrapper: {
         flexDirection:'row',
+        alignItems:'center'
     },
     likeText:{
         marginLeft: 10

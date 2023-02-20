@@ -4,14 +4,7 @@ import VideoItem from "../components/VideoItem";
 import { useDispatch, useSelector } from "react-redux";
 import { Globals } from "../globals/styles";
 import { getFeedThunk } from "../redux/thunk/searchVideos";
-const result = [{
-    url: 'https://i.ytimg.com/vi/kh1Hz1HIJDE/mqdefault.jpg',
-    title: 'The Reveal | Season 9 Ep. 1 | The Masked Singer',
-    publishedAt: '2023-02-16T02:00:07Z',
-    channelTitle: 'The Masked Singer',
-    viewCount: 10000,
-    videoId:'hhvdn3ZqQ0I'
-}]
+
 
 function Home() {
 
