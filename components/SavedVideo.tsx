@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View, Text } from "react-native";
+import { Image, StyleSheet, View, Text, Dimensions } from "react-native";
 import { chopString } from "../util/strings";
 interface ISavedVideo {
     image:string,
@@ -16,14 +16,9 @@ function SavedVideo({image, title, author, description, postedOn}:ISavedVideo):J
             <View>
                 <Image style={styles.image} source={{uri: image}}/>
             </View>
-            <View style={styles.textContainer}>
-                <View style={{flex: 1}}>
-                    <Text style={styles.title}>{title}</Text>
-                </View>
+            <View style={[styles.textContainer,{width: '70%'}]}>
+                <Text style={styles.title}>{title}</Text>
                 <Text style={styles.author}>{author}</Text>
-                <View style={{flexDirection:'row'}}>
-                    <Text style={styles.description}>{chopString(description,45)}</Text>
-                </View>
             </View>
         </View>
     );
@@ -40,7 +35,7 @@ const styles=StyleSheet.create({
     },
     image: {
         height:70,
-        width: 70,
+        width: Dimensions.get('window').width*0.3,
         resizeMode:'cover',
 
     },
@@ -49,10 +44,12 @@ const styles=StyleSheet.create({
     },
     title: {
         fontSize:15,
-        flex: 1
+        flex: 1,
+        flexWrap:'wrap'
     },
     author:{
-
+        fontSize:12,
+        color:'gray'
     },
     description: {
         fontSize:12,

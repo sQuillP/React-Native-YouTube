@@ -57,11 +57,10 @@ function History() {
 
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{flex: 1, backgroundColor:'white'}}>
-
                 {!loading && !authToken &&(<BlockedView type='History'/>)}
-                {loading && (
+                {
+                !!loading && (
                     <View style={styles.loader}>
                         <ActivityIndicator color={Globals.youtube_red} size='large'/>
                         <Text style={{textAlign:'center'}}>Authenticating..</Text>
@@ -70,22 +69,24 @@ function History() {
                 {
                     !!authToken &&(
                         <View style={{flex: 1}}>
-                            <View style={styles.inputWrapper}>
-                                <Ionicons 
-                                    size={20} 
-                                    name='search-outline' 
-                                    color='gray'
-                                    style={styles.icon}    
-                                />
-                                <TextInput
-                                    onChangeText={handleChangeText}
-                                    value={searchTerm}
-                                    style={styles.searchInput}
-                                    placeholder='Search Watch History'
-                                />
+                            <View style={styles.searchContainer}>
+                                <View style={styles.inputWrapper}>
+                                    <Ionicons 
+                                        size={20} 
+                                        name='search-outline' 
+                                        color='gray'
+                                        style={styles.icon}    
+                                    />
+                                    <TextInput
+                                        onChangeText={handleChangeText}
+                                        value={searchTerm}
+                                        style={styles.searchInput}
+                                        placeholder='Search Watch History'
+                                    />
+                                </View>
                             </View>
                             {
-                                loadingVideos && (
+                                !!loadingVideos && (
                                     <View style={styles.loader}>
                                         <ActivityIndicator color={Globals.youtube_red} size='large'/>
                                         <Text style={{textAlign:'center'}}>Fetching History</Text>
@@ -95,17 +96,14 @@ function History() {
                             {
                                 !videoStorage.length && !loadingVideos &&(
                                     <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                                        <Text style={{fontSize: 25, color:'lightgray', textAlign:'center'}}>
-                                            Empty History
-                                        </Text>
+                                        <Text style={{fontSize: 25, color:'lightgray', textAlign:'center'}}>Empty History</Text>
                                     </View>
                                 )
                             }
                             {
-                                videoStorage.length && !loadingVideos && (
+                                !!videoStorage.length && !loadingVideos && (
                                     <SavedVideoList
                                         videos={videoStorage}
-                                        
                                     />
                                 )
                             }
@@ -113,8 +111,6 @@ function History() {
                     )
                 }
             </View>
-        </TouchableWithoutFeedback>
-
     )
 }
 
@@ -125,6 +121,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:'white'
+    },
+    searchContainer: {
+        backgroundColor:'white',
+        paddingVertical:5
     },
     loader: {
         flex: 1,

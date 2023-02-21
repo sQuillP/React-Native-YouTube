@@ -24,7 +24,7 @@ function HomeSearch() {
 
     return (
         <SafeAreaView style={styles.container}>
-            {route.name!=='TabNavigation'&&(
+            {route.name=='Search'&&(
                 <Pressable style={styles.backIcon} onPress={()=> navigator.goBack()}>
                     <Ionicons name="arrow-back-outline" size={30} color='gray'/>
                 </Pressable>

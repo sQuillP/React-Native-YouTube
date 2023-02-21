@@ -51,6 +51,10 @@ function TabNavigation() {
                 />
                 <Tab.Screen 
                 options={{
+                    headerShown:true,
+                    header:(props)=> {
+                        return <HomeSearch/>
+                    },
                     tabBarIcon: ({ focused, color, size })=> {
                         return <Ionicons name="home-outline" color={color} size={30}/>
                     }

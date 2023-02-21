@@ -10,8 +10,8 @@ interface ISavedVideoList {
 function SavedVideoList({videos}:ISavedVideoList):JSX.Element {
 
     return (
-        <View style={styles.container}>
             <FlatList
+                style={{flex: 1}}
                 data={videos}
                 keyExtractor={(item)=> item.id}
                 renderItem={({item})=> {
@@ -27,7 +27,6 @@ function SavedVideoList({videos}:ISavedVideoList):JSX.Element {
                 }}
 
             />
-        </View>
     )
 }
 
@@ -37,6 +36,6 @@ export default SavedVideoList;
 
 const styles = StyleSheet.create({
     container: {
-
+        flex: 1
     }
 });
