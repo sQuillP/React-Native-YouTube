@@ -30,7 +30,7 @@ const authSlice = createSlice({
             state.authToken = null;
         });
         builder.addCase(login.fulfilled,(state,action)=> {
-            console.log('fulfilled user: ',action.payload);
+            console.log('fulfilled user ');
             state.authToken = action.payload;
             state.loading = false;
         });
@@ -38,7 +38,7 @@ const authSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(signup.fulfilled,(state,action)=> {
-            console.log('fulfilled user: ',action.payload);
+            console.log('fulfilled user ');
             state.authToken = action.payload;
             state.loading = false;
         });

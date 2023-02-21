@@ -17,7 +17,8 @@ function RootNavigation() {
 
     useEffect(()=> {
       (async ()=> {
-        const credentials:any = await AsyncStorage.getItem("TOKEN");
+        const authString:any =  await AsyncStorage.getItem("TOKEN");
+        const credentials:any =  JSON.parse(authString);
         dispatch(accessStoredToken(credentials));
       })
     },[])

@@ -11,8 +11,12 @@ function Home() {
     const {videos, loading} = useSelector((store:any)=> store.search);
 
     const dispatch:any = useDispatch();
-    useEffect(()=> {
+    useEffect(():any=> {
+        let mounted = true;
+        if(!mounted) return;
+        console.log('getting feed')
         dispatch(getFeedThunk(25));
+        return ()=> mounted = false;
     },[]);
 
 

@@ -29,6 +29,7 @@ const searchSlice = createSlice({
             state.videos = action.payload;
             state.loading = false;
         });
+        
     }
 });
 

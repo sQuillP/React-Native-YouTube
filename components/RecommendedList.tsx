@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { FlatList, StyleSheet } from "react-native"
+import { FlatList, View, Text } from "react-native"
 
 import { useSelector } from "react-redux";
 import RelatedVideo from "./RelatedVideo";
@@ -13,29 +13,38 @@ function RecommendedList() {
     const keyExtractor = useCallback((item:any)=> item.id,[]);
 
     return (
-        <FlatList
-            data={videos}
-            style={{paddingHorizontal:5}}
-            keyExtractor={keyExtractor}
-            initialNumToRender={25}
-            renderItem={({item})=> {
-                return (
-                    <RelatedVideo
-                        url={item.snippet.thumbnails.default.url}
-                        title={item.snippet.title}
-                        videoId={item.id}
-                        description={item.snippet.description}
-                        publishedAt={item.snippet.publishedAt}
-                    />
+        <>
+         {
+            !!videos.length &&(<FlatList
+                    data={videos}
+                    style={{paddingHorizontal:5}}
+                    keyExtractor={keyExtractor}
+                    initialNumToRender={25}
+                    renderItem={({item})=> {
+                        return (
+                            <RelatedVideo
+                                url={item.snippet.thumbnails.default.url}
+                                title={item.snippet.title}
+                                videoId={item.id}
+                                description={item.snippet.description}
+                                publishedAt={item.snippet.publishedAt}
+                            />
+                        );
+                    }}
+                />)
+            }
+            {
+                !videos.length && (
+                    <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
+                        <Text style={{fontSize: 15}}>No Content Available</Text>
+                    </View>
                 )
-            }}
-        />
+            }
+        </>
+
+        
     )
 }
 
 
 export default RecommendedList;
-
-const styles = StyleSheet.create({
-
-})

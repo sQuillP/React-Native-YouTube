@@ -14,17 +14,22 @@ function HomeSearch() {
     const route:any = useRoute();
     const dispatchVideos:any = useDispatch();
 
+    console.log(route.name);
 
     function onSearchTerm() {
         if(!term.trim()) return;
 
         dispatchVideos(searchVideos(term));
-        navigator.navigate('Search',{term});
-    }
+        if(route.name ==='ViewVideo' || route.name ==='Search')
+            navigator.replace("Search",{term});
+        else 
+            navigator.navigate('Search',{term});
 
+        
+    }
     return (
         <SafeAreaView style={styles.container}>
-            {route.name=='Search'&&(
+            {(route.name==='ViewVideo' || route.name==='Search')&&(
                 <Pressable style={styles.backIcon} onPress={()=> navigator.goBack()}>
                     <Ionicons name="arrow-back-outline" size={30} color='gray'/>
                 </Pressable>

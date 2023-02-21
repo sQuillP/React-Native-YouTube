@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View,  } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View,  } from "react-native";
 import YoutubeIframe from "react-native-youtube-iframe";
 import { useState, useEffect } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,7 +8,6 @@ import { formatTimeAgo } from "../util/formatDate";
 import { formatDuration } from "../util/formatTime";
 import formatViews from "../util/formatViews";
 import { getVideo } from "../axios/YouTube";
-import { Globals } from "../globals/styles";
 import CommentList from "../components/CommentList";
 import Description from "../components/Description";
 import {db} from '../firebaseConfig';
@@ -19,22 +18,24 @@ function ViewVideo() {
     const [showComments, updateShowComments] = useState<boolean>(false);
     const [videoContent, updateVideoContent] = useState<any>(null);
     const [loadRecommended, updateLoadRecommended] = useState(false);
-    const {height, width} = Dimensions.get('window');
+    const {width} = Dimensions.get('window');
     const {videoId}:any = useRoute().params;
     const {authToken} = useSelector((store:any)=> store.auth);
 
     /* get the video information */
-    useEffect(()=> {
+    useEffect(():any=> {
         let mounted = true;
         let video = null;
+        if(!mounted) return;
         (async()=> {
             try {
                 video = await getVideo(videoId);
-                if(!mounted) return;
                 updateVideoContent(video);
             } catch(error) {
                 console.log('error fetching video information', error);
             }
+
+            /* post video into the firebase db to save to history */
             if(authToken !== null && video !== null){
                 try {
                     const snapshot:any = await get(ref(db,`history/${authToken.uid}/${videoId}`));
@@ -50,7 +51,7 @@ function ViewVideo() {
                 }
             }
         })();
-        return ()=>{mounted = false}
+        return ()=> mounted = false;
     },[videoId]);
 
     /* get the feed 3 seconds after video is loaded*/
@@ -61,7 +62,6 @@ function ViewVideo() {
         return ()=> clearTimeout(timeout);
     },[]);
 
-    /* post video into the firebase db to save to history */
  
 
     function onCloseComments():void{
@@ -70,6 +70,26 @@ function ViewVideo() {
 
     function onCloseDescription():void{
         updateShowDescription(false);
+    }
+
+    async function onLikeVideo() {
+        try {
+
+            const existingVideo = await get(ref(db,`liked/${authToken.uid}/${videoId}`));
+
+            if(existingVideo.exists()) {
+                console.log('video already is liked')
+                return;
+            }
+
+            await set(ref(db,`liked/${authToken.uid}/${videoId}`), {
+                id: videoId,
+                snippet: videoContent.snippet,
+                channelTitle:videoContent.snippet.channelTitle
+            });
+        } catch(error) {
+            console.log('unable to like video');
+        }
     }
 
     function renderContent() {
@@ -95,6 +115,14 @@ function ViewVideo() {
                         <Text style={styles.crumbDesc}>Show Description</Text>
                         <Ionicons name="pencil-outline" size={15} color='black'/>
                     </TouchableOpacity>
+
+                    { !!authToken &&(
+                        <TouchableOpacity style={styles.breadCrumb} onPress={onLikeVideo}>
+                            <Ionicons style={{marginRight:3}} name='heart-outline' size={15} color='black'/>
+                            <Text style={styles.crumbDesc}>Like</Text>
+                        </TouchableOpacity>
+                        )
+                    }
                     <TouchableOpacity 
                         style={styles.breadCrumb}
                         onPress={()=>updateShowComments(true)}>

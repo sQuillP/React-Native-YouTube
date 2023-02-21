@@ -23,7 +23,7 @@ function RelatedVideo({url, title, description, publishedAt, videoId}:RelatedVid
     const navigation:any = useNavigation();
 
     function handleNavigation():void {
-        navigation.navigate('ViewVideo', {videoId});
+        navigation.replace('ViewVideo',{videoId});
     }
 
     return (

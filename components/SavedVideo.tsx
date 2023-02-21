@@ -1,18 +1,26 @@
-import { Image, StyleSheet, View, Text, Dimensions } from "react-native";
+import { Image, StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native";
+import { memo } from "react";
 import { chopString } from "../util/strings";
+import { useNavigation } from "@react-navigation/native";
 interface ISavedVideo {
     image:string,
     title:string,
     description:string,
     postedOn:string | Date,
-    author:string
+    author:string,
+    videoId:string
 }
 
 
-function SavedVideo({image, title, author, description, postedOn}:ISavedVideo):JSX.Element {
+function SavedVideo({image, title, author, description, postedOn, videoId}:ISavedVideo):JSX.Element {
+
+    const navigation:any = useNavigation();
+    function onNavigate() {
+        navigation.navigate('ViewVideo',{videoId});
+    }
 
     return (
-        <View style={styles.container}>
+        <TouchableOpacity onPress={onNavigate} activeOpacity={0.7} style={styles.container}>
             <View>
                 <Image style={styles.image} source={{uri: image}}/>
             </View>
@@ -20,7 +28,7 @@ function SavedVideo({image, title, author, description, postedOn}:ISavedVideo):J
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.author}>{author}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 

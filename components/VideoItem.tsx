@@ -1,7 +1,7 @@
 import {View, Image, Text, StyleSheet, Dimensions, TouchableOpacity, } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { formatTimeAgo } from '../util/formatDate';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {memo} from 'react';
 
 /* Used for video feed */
@@ -10,9 +10,13 @@ import {memo} from 'react';
 function VideoItem({url, title, publishedAt, channelTitle, videoId}:any):any {
     
     const navigator:any = useNavigation();
-
+    const {name} = useRoute();
+    
     function onNavigateVideo() {
-        navigator.navigate('ViewVideo',{videoId});
+        if(name === 'Search')
+            navigator.replace('ViewVideo',{videoId});
+        else
+            navigator.navigate('ViewVideo',{videoId});
     }
 
     return (

@@ -35,8 +35,8 @@ function TabNavigation() {
                 name="Favorites" 
                 component={Favorites}
                 options={{
-                    headerTitle:'History',
-                    headerShown:true,
+                    headerTitle:'Favorites',
+                    headerShown:!!authToken,
                     headerRight: ()=> {
                         return (
                             <Pressable style={styles.signoutBtn} onPress={onSignOut}>

@@ -17,6 +17,7 @@ function SavedVideoList({videos}:ISavedVideoList):JSX.Element {
                 renderItem={({item})=> {
                     return (
                         <SavedVideo
+                            videoId={item.id}
                             image={item.snippet.thumbnails.standard.url}
                             title={item.snippet.title}
                             author={item.channelTitle}
