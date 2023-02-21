@@ -5,11 +5,22 @@ import HomeSearch from '../components/HomeSearch';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import ViewVideo from '../screens/ViewVideo';
 import Login from '../screens/Login';
-import { Text } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { accessStoredToken } from '../redux/slice/authSlice';
 const Stack = createNativeStackNavigator();
 
 function RootNavigation() {
+
+    const dispatch:any = useDispatch();
+
+    useEffect(()=> {
+      (async ()=> {
+        const credentials:any = await AsyncStorage.getItem("TOKEN");
+        dispatch(accessStoredToken(credentials));
+      })
+    },[])
 
     return (
         <Stack.Navigator
@@ -17,9 +28,9 @@ function RootNavigation() {
             }}
         >
             <Stack.Screen
-                options={{
-                    header:(props)=> <HomeSearch/>
-                }}
+            options={{
+                headerShown:false
+            }}
             name='TabNavigation' component={TabNavigation}
             />
             <Stack.Screen 
@@ -34,7 +45,7 @@ function RootNavigation() {
             name='ViewVideo' component={ViewVideo}/>
             <Stack.Screen 
                 options={ {
-                    title:'Sign in'
+                    title:'Sign in',
                 }}
             name='Login' component={Login}/>
         </Stack.Navigator>

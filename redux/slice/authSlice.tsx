@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login, signup } from "../thunk/auth";
+import { login, signout, signup } from "../thunk/auth";
 
 interface IInitialState {
     authToken: any,
@@ -16,8 +16,9 @@ const authSlice = createSlice({
     name:'auth',
     initialState,
     reducers:{
-        logout:(state)=> {
-            state.authToken = null;
+        accessStoredToken:(state,action)=> {
+            console.log('should login user with valid credentials');
+            state.authToken = action.payload;
         }
     },
     extraReducers:(builder)=> {
@@ -46,9 +47,23 @@ const authSlice = createSlice({
             state.authToken = null;
         });
 
+        builder.addCase(signout.pending,(state)=> {
+            state.loading = true;
+        });
+
+        builder.addCase(signout.fulfilled,(state,action)=> {
+            state.loading = false;
+            state.authToken = action.payload;
+        });
+
+        builder.addCase(signout.rejected,(state,action)=> {
+            state.loading = false;
+            state.authToken = action.payload;
+        })
+
     }
 });
 
 
-export const {logout} = authSlice.actions;
+export const {accessStoredToken} = authSlice.actions;
 export default authSlice.reducer;

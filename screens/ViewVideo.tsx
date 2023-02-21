@@ -11,7 +11,9 @@ import { getVideo } from "../axios/YouTube";
 import { Globals } from "../globals/styles";
 import CommentList from "../components/CommentList";
 import Description from "../components/Description";
-
+import {db} from '../firebaseConfig';
+import {set, ref, get} from 'firebase/database';
+import { useSelector } from "react-redux";
 function ViewVideo() {
     const [showDescription, updateShowDescription] = useState<boolean>(false);
     const [showComments, updateShowComments] = useState<boolean>(false);
@@ -19,23 +21,48 @@ function ViewVideo() {
     const [loadRecommended, updateLoadRecommended] = useState(false);
     const {height, width} = Dimensions.get('window');
     const {videoId}:any = useRoute().params;
+    const {authToken} = useSelector((store:any)=> store.auth);
 
+    /* get the video information */
     useEffect(()=> {
         let mounted = true;
+        let video = null;
         (async()=> {
-            const video:any = await getVideo(videoId);
-            if(!mounted) return;
-            updateVideoContent(video);
+            try {
+                video = await getVideo(videoId);
+                if(!mounted) return;
+                updateVideoContent(video);
+            } catch(error) {
+                console.log('error fetching video information', error);
+            }
+            if(authToken !== null && video !== null){
+                try {
+                    const snapshot:any = await get(ref(db,`history/${authToken.uid}/${videoId}`));
+                    if(!snapshot.exists()){
+                        set(ref(db,`history/${authToken.uid}/${videoId}`),{
+                            id:videoId,
+                            channelTitle:video.snippet.channelTitle,
+                            snippet: video.snippet
+                        });
+                    }
+                } catch(error) {
+                    console.log('unable to send information to firebase ',error);
+                }
+            }
         })();
         return ()=>{mounted = false}
     },[videoId]);
 
+    /* get the feed 3 seconds after video is loaded*/
     useEffect(()=> {
         const timeout = setTimeout(()=> {
             updateLoadRecommended(true);
         },3000);
         return ()=> clearTimeout(timeout);
     },[]);
+
+    /* post video into the firebase db to save to history */
+ 
 
     function onCloseComments():void{
         updateShowComments(false);

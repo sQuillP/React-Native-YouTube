@@ -5,12 +5,19 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import Home from "../screens/Home";
 import { Globals } from "../globals/styles";
 import HomeSearch from "../components/HomeSearch";
-
+import { signout } from "../redux/thunk/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { Pressable, Text, StyleSheet, TouchableOpacity } from "react-native";
 const Tab = createBottomTabNavigator();
 
 
 function TabNavigation() {
 
+    const dispatch:any = useDispatch();
+    const {authToken}:any = useSelector((store:any)=> store.auth);
+    function onSignOut() {
+        dispatch(signout());
+    }
 
 
     return (
@@ -28,9 +35,18 @@ function TabNavigation() {
                 name="Favorites" 
                 component={Favorites}
                 options={{
+                    headerTitle:'History',
+                    headerShown:true,
+                    headerRight: ()=> {
+                        return (
+                            <Pressable style={styles.signoutBtn} onPress={onSignOut}>
+                                <Text style={styles.signout}>Sign Out</Text>
+                            </Pressable>
+                        )
+                    },
                     tabBarIcon:({focused, color, size})=> {
                         return <Ionicons name="heart-outline" color={color} size={30}/>
-                    }
+                    },
                 }}
                 />
                 <Tab.Screen 
@@ -40,11 +56,20 @@ function TabNavigation() {
                     }
                 }}
                 name="Home" component={Home}/>
-                {/* focused?Globals.youtube_red:'black' */}
             <Tab.Screen 
                 name="History" 
                 component={History} 
+                
                 options={{
+                    headerTitle:'History',
+                    headerShown:!!authToken,
+                    headerRight: ()=> {
+                        return (
+                            <TouchableOpacity style={styles.signoutBtn} onPress={onSignOut}>
+                                <Text style={styles.signout}>Sign Out</Text>
+                            </TouchableOpacity>
+                        )
+                    },
                     tabBarIcon:({focused, color, size})=> {
                         return <Ionicons name="bookmark-outline" color={color} size={30}/>
                     }
@@ -56,3 +81,16 @@ function TabNavigation() {
 
 
 export default TabNavigation;
+
+const styles = StyleSheet.create({
+    signout: {
+        color:'blue',
+        fontSize:15,
+    },
+    signoutBtn: {
+        padding:5,
+        justifyContent:'center',
+        marginRight:10
+    }
+
+})
