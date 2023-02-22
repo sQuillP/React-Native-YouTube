@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { db } from '../firebaseConfig';
-import {ref, onValue, DataSnapshot } from "firebase/database";
+import {ref, onValue, DataSnapshot, off } from "firebase/database";
 import FirebaseUI from '../components/FirebaseUI';
 import { VideoResult } from '../models/Video';
 
@@ -20,17 +20,21 @@ function History() {
     const [videoStorage, updateVideoStorage] = useState<any>([]);
     const [loadingVideos, updateLoadingVideos] = useState<boolean>(false);
 
+    console.log('history rerendering')
 
     useEffect(():any=> {
         //make firebase api call here
         if(!authToken) return;
         updateLoadingVideos(true);
 
-        return onValue(ref(db,`history/${authToken.uid}`),(snapshot:DataSnapshot)=> {
+        return  onValue(ref(db,`history/${authToken.uid}`),(snapshot:DataSnapshot)=> {
             updateLoadingVideos(false);
             if(!snapshot.exists()) return;
             console.log('ONVALUE video storage')
-            updateVideoStorage(formatDBResponse(snapshot.val()));
+            const fmt = formatDBResponse(snapshot.val());
+            updateVideoStorage(fmt);
+            console.log('number of videos retrieved', fmt.length)
+
         });
     },[authToken]);
 

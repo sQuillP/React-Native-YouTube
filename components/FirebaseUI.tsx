@@ -20,13 +20,14 @@ interface IFirebaseUI {
 function FirebaseUI({loading, authToken,loadingVideos,videoStorage, type}:IFirebaseUI) {
 
     const [searchTerm, updateSearchTerm] = useState<string>('');
-    const [searchedVideos, updateSearchedVideos] = useState<VideoResult[]>(videoStorage);
+    const [searchedVideos, updateSearchedVideos] = useState<VideoResult[]>([]);
     const debouncedTerm = useDebounce(searchTerm, 1000);
 
+    console.log('firebaseui rerendering '+type);
+
     useEffect(()=> {
-        console.log('should search');
-        if(!searchTerm.trim()){
-            updateSearchedVideos(videoStorage);
+        if(!searchTerm.trim() || searchedVideos.length === 0){
+            updateSearchedVideos(videoStorage)
         }
         else {
             const matchedVideos = videoStorage.filter((video:VideoResult)=> {
@@ -34,7 +35,7 @@ function FirebaseUI({loading, authToken,loadingVideos,videoStorage, type}:IFireb
             });
             updateSearchedVideos(matchedVideos);
         }
-    },[debouncedTerm]);
+    },[debouncedTerm, videoStorage]);
     
     function handleChangeText(text:string) {
         updateSearchTerm(text);
@@ -78,14 +79,14 @@ function FirebaseUI({loading, authToken,loadingVideos,videoStorage, type}:IFireb
                             )
                         }
                         {
-                            !searchedVideos.length && !loadingVideos &&(
+                            (!searchedVideos.length && !loadingVideos) &&(
                                 <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
                                     <Text style={{fontSize: 25, color:'lightgray', textAlign:'center'}}>Empty Results</Text>
                                 </View>
                             )
                         }
                         {
-                            !!searchedVideos.length && !loadingVideos && (
+                            (!!searchedVideos.length && !loadingVideos) && (
                                 <SavedVideoList
                                     videos={searchedVideos}
                                 />

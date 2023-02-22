@@ -14,8 +14,6 @@ function HomeSearch() {
     const route:any = useRoute();
     const dispatchVideos:any = useDispatch();
 
-    console.log(route.name);
-
     function onSearchTerm() {
         if(!term.trim()) return;
 
@@ -59,7 +57,7 @@ export default HomeSearch;
 
 const styles = StyleSheet.create({
     container:{
-        paddingVertical: 10,
+        paddingVertical: 15,
         paddingHorizontal:10,
         flexDirection:'row',
     },
@@ -68,16 +66,17 @@ const styles = StyleSheet.create({
         borderRadius:10,
         overflow:'hidden',
         backgroundColor: 'lightgray',
-        flex: 1
+        flex: 1,
+        paddingVertical: 5
     },
     input: {
         flex: 1,
-        paddingVertical:3,
+        paddingVertical:10,
         paddingLeft: 10
     },
     searchIcon: {
         position: 'absolute',
-        top: 5,
+        top: 14,
         right: 10,
     },
     backIcon: {

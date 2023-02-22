@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {db} from '../firebaseConfig';
-import {ref, get, onValue, DataSnapshot, DatabaseReference} from 'firebase/database';
+import {ref, get, off, onValue, DataSnapshot, DatabaseReference} from 'firebase/database';
 import { VideoResult } from "../models/Video";
 import FirebaseUI from "../components/FirebaseUI";
 
@@ -32,8 +32,8 @@ function Favorites() {
             updateLoadingVideos(false);
             if(!snapshot.exists()) return;
             const formattedData = formatDbResponse(snapshot.val());
-            console.log(Object.keys(snapshot.val()));
             updateVideoStorage(formattedData);
+            console.log('number of liked videos: ',formattedData.length)
         });
     },[authToken]);
     

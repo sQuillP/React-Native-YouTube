@@ -26,11 +26,11 @@ function ViewVideo() {
     useEffect(():any=> {
         let mounted = true;
         let video = null;
-        if(!mounted) return;
         (async()=> {
             try {
                 video = await getVideo(videoId);
-                updateVideoContent(video);
+                if(mounted)
+                    updateVideoContent(video);
             } catch(error) {
                 console.log('error fetching video information', error);
             }
@@ -39,7 +39,7 @@ function ViewVideo() {
             if(authToken !== null && video !== null){
                 try {
                     const snapshot:any = await get(ref(db,`history/${authToken.uid}/${videoId}`));
-                    if(!snapshot.exists()){
+                    if(!snapshot.exists() && mounted){
                         set(ref(db,`history/${authToken.uid}/${videoId}`),{
                             id:videoId,
                             channelTitle:video.snippet.channelTitle,
